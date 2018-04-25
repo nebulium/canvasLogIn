@@ -9,85 +9,74 @@ if(typeof canvas.getContext == 'function'){
 canvas.setAttribute("width",width+"px");
 canvas.setAttribute("height",height+"px");
 
+
 //遮罩
-// var img = document.getElementById('img');
-// context.drawImage(img,0,0);
-// var imgData = context.getImageData(0,0,width,height);
-// var newImgData = gaussBlur(imgData);
-// context.putImageData(newImgData,0,0);
+var imgData = null;
 img.onload = function(){
 	context.drawImage(img,0,0);
-	var imgData = context.getImageData(0,0,width,height);
+	imgData = context.getImageData(0,0,width,height);
 	var newImgData = gaussBlur(imgData);
 	context.putImageData(newImgData,0,0);
 }//getImageData的跨域问题  图片存储在本地时，是默认没有域名的，用getImageData方法时，浏览器会判定为跨域而报错！
 
-
-var x1 = y1 = x2 = y2 = 0;
-var press = false;
-
-context.strokeStyle = "rgba(0,0,0,1)";
+//setInterval调用draw函数
+//每一“帧”的时候，路线上存在n个点（dots对象），每一个对象有各自的x/y/r
+//draw函数在每一帧绘制每个点（调用drawDot）
+function Dots(x,y,r){
+	this.x = x;
+	this.y = y;
+	this.r = r;
+}
+var dots = [];
 
 //注意：监听canvas！
-canvas.addEventListener('mousedown',handler,false);
-canvas.addEventListener('mousemove',handler,false);
-canvas.addEventListener('mouseup',handler,false);
+canvas.addEventListener('mousemove',function(ele){
+	var x = ele.clientX - canvas.offsetLeft;
+	var y = ele.clientY - canvas.offsetTop;
+	var r = 50;
+	dots.push(new Dots(x,y,r));
+},false);
 
-function handler(ele){
-	switch(ele.type){
-		case 'mousedown':
-		// x1 = ele.clientX - canvas.offsetLeft;
-		// y1 = ele.clientY - canvas.offsetTop;
-		// context.save();
-		// context.beginPath();
-		// context.arc(x1,y1,30,0,2*Math.PI);
-		// context.clip();
-		// context.clearRect(0,0,1000,615);
-		// context.restore();
-		// press = true;
-		break;
-		case 'mousemove':
-		// if(press){
-			x2 = ele.clientX - canvas.offsetLeft;
-			y2 = ele.clientY - canvas.offsetTop;
-			clear(x1,y1,x2,y2,context);
-			x1 = x2;
-			y1 = y2;
-		// }
-		break;
-		case 'mouseup':
-		// press = false;
-		break;
+function draw(){
+	context.putImageData(imgData,0,0);
+	for(var i = 0; i < dots.length; i++){
+		if(dots[i].r <= 40){
+			dots.splice(i,1);
+		}
+	}
+	for(var i = 0; i < dots.length; i++){
+		drawDot(dots[i]);
 	}
 }
 
-function clear(x1,y1,x2,y2,context){
-	var r = 30;
-	//line四个点的坐标值,顺时针排列
-	var a1 = a4 = x1;
-	var b1 = y1 - r;
-	var b4 = y1 + r;
-	var a2 = a3 = x2;
-	var b2 = y2 - r;
-	var b3 = y2 + r;
-	context.save();
-	context.beginPath();
-	context.arc(x2,y2,r,0,2*Math.PI);
-	context.clip();
-	context.clearRect(0,0,1000,615);
-	context.restore();
-
-	context.save();
-	context.beginPath();
-	context.moveTo(a1,b1);
-	context.lineTo(a2,b2);
-	context.lineTo(a3,b3);
-	context.lineTo(a4,b4);
-	context.lineTo(a1,b1);
-	context.clip();
-	context.clearRect(0,0,1000,615);
-	context.restore();
+function drawDot(dot){
+		var x = dot.x;
+		var y = dot.y;
+		var r = dot.r;
+	    context.save();
+	    context.shadowBlur = 20;
+	    context.shadowColor = "black";
+	    context.beginPath();
+	    context.arc(x,y,r,0,2*Math.PI);
+	    context.clip();
+	    context.clearRect(0,0,1000,615);
+	    context.restore();
+	    dot.r --;
 }
+
+setInterval(draw,100);
+
+// window.requestAnimate = function(){
+// 	return window.requestAnimationFrame
+// 		|| window.webkitRequestAnimationFrame
+// 		|| window.mozRequestAnimationFrame
+// 		|| window.oRequestAnimationFrame
+// 		|| window.msRequestAnimationFrame
+// 		|| function(callback){
+// 			window.setTimeout(callback,1e3/60)
+// 		}
+// }();
+// requestAnimate(draw);
 
 function gaussBlur(img){
 	var pixes = img.data;
