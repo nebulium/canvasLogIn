@@ -1,5 +1,10 @@
+
+var imgData = null; //存储遮罩
+
+//初始化：
 var canvas = document.getElementById('main');
 var container = document.getElementById('container');
+var img = document.getElementById('img');
 var width = container.offsetWidth;
 var height = container.offsetHeight;
 if(typeof canvas.getContext == 'function'){
@@ -11,7 +16,6 @@ canvas.setAttribute("height",height+"px");
 
 
 //遮罩
-var imgData = null;
 img.onload = function(){
 	context.drawImage(img,0,0);
 	imgData = context.getImageData(0,0,width,height);
@@ -54,17 +58,36 @@ function drawDot(dot){
 		var y = dot.y;
 		var r = dot.r;
 	    context.save();
-	    context.shadowBlur = 20;
-	    context.shadowColor = "black";
 	    context.beginPath();
 	    context.arc(x,y,r,0,2*Math.PI);
 	    context.clip();
-	    context.clearRect(0,0,1000,615);
+	    context.clearRect(0,0,width,height);
 	    context.restore();
+
+	    // 进行边缘模糊处理:处理10px的圆环的值,即考虑半径为r-10到r的点的透明度
+	    var tmpImageData = context.getImageData(0,0,width,height);
+	    var data = tmpImageData.data;
+	    for(var i = 0; i <= 30; i++){
+	    	var curR = r - 10 + i;//当前圆环半径
+	    	for(var j = 0; j <= 360; j++){
+	    		//360度
+	    		//确认当前需要处理的点的坐标
+	    		var x1 = parseInt(x + curR * Math.cos(j * Math.PI / 180));
+	    		var y1 = parseInt(y + curR * Math.sin(j * Math.PI / 180));
+	    		if( x1 < 0 || y1 < 0 || x1 > width || y1 > height) continue;
+	    		var curPoint = (y1 * width + x1) * 4 + 3; //在data上的a对应索引
+	    		if(data[curPoint] == 0) continue;
+	    		var tmpAlpha = 255 * (i * 0.033);
+	    		if(tmpAlpha < data[curPoint]) data[curPoint] = tmpAlpha;
+	    	}
+	    }
+	    context.putImageData(tmpImageData,0,0);
+	    context.globalCompositeOperation="destination-out";
+
 	    dot.r --;
 }
 
-setInterval(draw,100);
+setInterval(draw,16);
 
 // window.requestAnimate = function(){
 // 	return window.requestAnimationFrame
