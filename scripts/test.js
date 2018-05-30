@@ -11,8 +11,8 @@ class Canvas {
 		const width = this.container.offsetWidth;
 		const height = this.container.offsetHeight;
 		return `
-		<img src="${src}" style="display:none"/>
-		<canvas width="${width}px" height="${height}px">
+		<img src="${src}" style="display:none" width="${width}px" height="${height}px"/>
+		<canvas width="${width}px" height="${height}px" style="background:url(${src}) no-repeat;">
 		`
 	}
 	init(){
@@ -33,9 +33,9 @@ class Canvas {
 			context.putImageData(newImgData, 0, 0);
 		},false); //箭头函数，绑定this
 
-		canvas.addEventListener('mousemove', function(evt) {
-			let x = evt.clientX - canvas.offsetLeft;
-			let y = evt.clientY - canvas.offsetTop;
+		document.addEventListener('mousemove', function(evt) {
+			let x = evt.clientX - getOffset(canvas).left;
+			let y = evt.clientY - getOffset(canvas).top;
 			let r = 50;
 			dots.push(new Dots(x,y,r));
 		}, false);
@@ -106,7 +106,7 @@ class Canvas {
 
 }
 
-let canvas = new Canvas('test',{img:'bg.jpg'});
+let canvas = new Canvas('canvasBg',{img:'image/bg2.jpg'});
 
 setInterval(() => {
 	canvas.draw();

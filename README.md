@@ -8,11 +8,12 @@
 - [ ] 登录界面：为了进行综合性质的练习，考虑读取已有信息、表单及验证、用户暂停输入的时候自动补全信息
 - [ ] 整体预期效果如：<https://www.canva.com/>
 - [ ] 考虑移动端
-- [ ] 考虑ES6
+- [x] 考虑ES6
 - [ ] 考虑React
-- [ ] 考虑做成插件
+- [x] 考虑做成插件
 - [ ] 考虑兼容性问题
-- [ ] 面向对象
+- [x] 面向对象
+- [ ] 跨域问题
 - [ ] more
 
 ## 修改说明
@@ -64,7 +65,7 @@ img.onload中调用canvas的getImageData方法出现跨域问题，这是因为�
 - drawDot函数绘制每一个点，基于之前的canvas清除方式实现，注意每次使得每个点对象的半径减1以实现动画效果。
 
 ### 涂抹功能完善（4/26）
-鼠标滑过时进行清除，在此基础上，处理滑过的效果，使之产生“光晕”
+- 鼠标滑过时进行清除，在此基础上，处理滑过的效果，使之产生“光晕”
 - “光晕”即产生的圆形在不同的半径上产生不同的透明度，因此需要对图片像素进行处理
 - 在drawDot函数中，获取清除后的图片数
 - 确认每个像素点对应的data上的Alpha数据的位置，考虑处理半径从r-10到r。
@@ -77,3 +78,33 @@ var curPoint = (y1 * width + x1) * 4 + 3; //在data上的a对应索引
 ```
 - 处理透明度即可
 - 将获取到的数据用putImageData放回去
+
+### 组件化、面向对象、ES6(5/26)
+- 纯JS进行UI组件化设计，inspired by 360前端星
+- API：render()/init()/draw()/drawDot()
+- img.onload:
+    - 为确保img.onload中的this为对象的this，使用箭头函数
+    - 为确保img加载完毕之后进行draw，在draw首行进行简单的标识判断
+- canvas.context:
+    - 对于统一个canvas对象，不同地方产生的context（canvas.getContext('2d'))是相同的。用全等号进行判断的时候返回true;
+- bugs
+    - 当container为absolute或者relative，相当于父元素有偏移的时候，对于canvas的鼠标监听坐标不准确。
+    - 解决：tool.js中的getOffset函数，进行兼容性处理，获得相对于视口的canvas偏移。
+    - 当containerz-index为最小值时，无法直接监听canvas的鼠标时间。
+    - 解决：监听document的即可。
+
+### 页面仿写(5/30)
+- 页面的其他部分按照参考页面进行仿写
+- 页面结构
+    - header包含标题和登录表单、footer包含一个多语言select列表、main部分包含注册表单和说明
+    - @media(max-width < 815px)：header中登录表单只留下登录按钮、main部分说明隐藏
+    - main部分内容区宽度一定，始终居中
+- flex布局
+- input/button
+    - 宽和高用padding、margin等调节
+- footer先直接用一个链接文字处理。
+    - 考虑到美观性问题，将footer文字放在视口右下角。
+- main部分
+    - 原网站的logo字体竟然是用svg做的。原理很简单。稍后考虑。先用font-family代替
+
+

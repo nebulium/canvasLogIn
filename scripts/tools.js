@@ -72,3 +72,45 @@ function Dots(x,y,r){
 	this.y = y;
 	this.r = r;
 }
+
+// 获取相对于窗口的偏移量
+function getOffsetSum(ele) {
+	var top = 0, left = 0;
+	while(ele) {
+		top += ele.offsetTop;
+		left += ele.offsetLeft;
+		ele = ele.offsetParent;
+	}
+	return {
+		top: top,
+		left: left
+	}
+}
+
+function getOffsetRect(ele) {
+	var box = ele.getBoundingClientRect();
+	var body = document.body,
+		docElem = document.documentElement;
+	var scrollTop = window.pageYoffset 
+					|| docElem.scrollTop
+					|| body.scrollTop;
+	var scrollLeft = window.pageXoffset
+					|| docElem.scrollLeft
+					|| body.scrollLeft;
+	var clientTop = docElem.clientTop || body.clientTop;
+	var clientLeft = docElem.clientLeft || body.clientLeft;
+	var top = box.top + scrollTop - clientTop;
+	var left = box.left + scrollLeft - clientLeft;
+	return {
+		top: Math.round(top),
+		left: Math.round(left)
+	}
+}
+
+function getOffset(ele) {
+	if(ele.getBoundingClientRect) {
+		return getOffsetRect(ele);
+	} else {
+		return getOffsetSum(ele);
+	}
+}

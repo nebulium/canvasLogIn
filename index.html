@@ -3,41 +3,50 @@
 <head>
 	<meta charset="utf-8">
 	<title>Miracle Canvas</title>
-	<style type="text/css">
-		*{
-			padding: 0;
-			margin: 0;
-		}
-
-		#container{
-			width: 1000px;
-			height: 615px;
-			background-image: url(bg.jpg);
-			margin: 0 auto;
-		}
-		#test{
-			width: 1000px;
-			height: 615px;
-			/*background-image: url(bg.jpg);*/
-			margin: 0 auto;
-		}
-		#main{
-			/*background-color: red;*/
-		}
-/*		img{
-			display: none;
-		}*/
-
-	</style>
+	<link href='http://fonts.font.im/css?family=Pacifico' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" type="text/css" href="styles/style.css">
 </head>
 <body>
-<!-- 	<div id="container">
-	    <img src="bg.jpg" id="img">
-		<canvas id="main" width="100px" height="100px"></canvas>
+    <div id="canvasBg"></div>
+    <div id="logIn">
+    	<header>
+    		<span class="logo"><a href="#">支持</a></span>
+    		<div class="log">
+    			<form>
+    				<input type="text" id="userName" placeholder="用户名/邮箱">
+    				<input type="password" id="password" placeholder="密码">
+    				<span class="btn-group">
+    					<button type="button" class="left-btn">登录</button><button type="button" class="right-btn">&#8744;</button>
+    				</span>
+    				<button type="button" class="forget-btn">忘记密码?</button>
+    			</form>
+    		</div>
+    	</header>
+	    <div id="main">
+	    	<div class="register-pannel">
+	    		<div class="banner">Canva</div>
+	    		<div class="register">
+	    			<header>第一次使用Canvas？立即注册！</header>
+	    			<p>请告诉我们你是用Canva的最主要用途，帮助我们为你提供最出色的体验：</p>
+	    			<form>
+	    				<button type="button">教育机构<span>（教师或学生）</span></button><br/>
+	    				<button type="button">小型企业<span>（初创企业、博客）</span></button><br/>
+	    				<button type="button">大型公司<span>（员工超过100人）</span></button><br/>
+	    				<button type="button">非营利组织或慈善组织</button><br/>
+	    				<button type="button">个人<span>（家庭、家人或朋友）</span></button><br/>
+	    			</form>
+	    		</div>
+	    		<div class="register-footer">注册即表示你同意Canva的<a href="#">使用条款</a>和<a href="#">隐私权政策</a></div>
+	    	</div>
+	    	<div class="info">
+	    		<h2>让你和你的团队设计出精彩的作品</h2>
+	    		<p>让你的团队成员共同参与品牌设计。释放你的创造力。</p>
+	    		<p>"我们可以编辑整个团队的设计"</p>
+	    		<p>-Yelp</p>
+	    	</div>
+	    </div>
+	    <footer><a href="#">简体中文（中国）</a></footer>
     </div>
-    <script type="text/javascript" src="main.js"></script> -->
-
-    <div id="test"></div>
     <script type="text/javascript" src="scripts/tools.js"></script>
     <script type="text/javascript" src="scripts/test.js"></script>
 </body>
